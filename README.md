@@ -62,11 +62,11 @@ Name: WPM, dtype: int32
 - More efficient logging & stats (Ideas: one file per day?  sqlite)
 - Add to auto-run on Windows start- Website
 
-### Correct Fingers?
+### Epic: Correct Fingers?
 - record a webcam shot on each keypress and analyze whether the correct finger was used to press the key
 - prevent the wrong key to register
 
-### Corrections
+### Epic: AutoCorrections
 - Show most common typos? (Idea: Learn typos on backspace presses)
 - Auto-correct typos
 - Enable corrections on words that a further away (not only the last word)
@@ -80,7 +80,7 @@ Name: WPM, dtype: int32
 - [Windows Typing Predictions](https://www.howtogeek.com/429702/how-to-enable-text-prediction-for-a-hardware-keyboard-on-windows-10/)
 - [Lightkey](https://www.lightkey.io)
 
-## Websites
+### Websites
 
 - [keybr.com](https://www.keybr.com/) typing practice
 - [zty.pe](https://zty.pe/) super cool typing game
