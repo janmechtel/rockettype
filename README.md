@@ -64,6 +64,18 @@ Name: WPM, dtype: int32
 
 - record a webcam shot on each keypress and analyze whether the correct finger was used to press the key
 - Show most common typos?
-- Auto-correct typos like [Universal AutoCorrect](http://www.biancolo.com/blog/autocorrect/) for [AutoHoteKey](https://www.autohotkey.com/)
-- Enable corrections on words that a further away (not only the last word like [Windows Typing Predictions](https://www.howtogeek.com/429702/how-to-enable-text-prediction-for-a-hardware-keyboard-on-windows-10/)
+- Auto-correct typos
+- Enable corrections on words that a further away (not only the last word 
 
+## Inspirations
+
+### Tools 
+- [Universal AutoCorrect](http://www.biancolo.com/blog/autocorrect/) for [AutoHoteKey](https://www.autohotkey.com/)
+- [Windows Typing Predictions](https://www.howtogeek.com/429702/how-to-enable-text-prediction-for-a-hardware-keyboard-on-windows-10/)
+- [Lightkey](https://www.lightkey.io/free-text-editor)
+
+## Websites
+
+- [keybr.com](https://www.keybr.com/) typing practice
+- [zty.pe](https://zty.pe/) super cool typing game
+- [typelit.io](https://www.typelit.io/) Improve your typing by practicing on classic literature
