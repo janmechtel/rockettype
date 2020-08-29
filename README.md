@@ -1,21 +1,39 @@
 # rockettype
+
 A windows keylooger to track typing statistics like WPM
 
 - logger - Stores each keypress into and ever growing file `outputs\key_log.txt`
 - Stats  - calculates WPM
 
-DISCLAIMER: Currently *all* keypresses are logged, including passwords etc.
+The log file can be imported into other software like Pandas, Excel, PowerBI etc. to calculate other statistics
 
-## Requirements
-- Python 3
+_DISCLAIMER: Currently **all** keypresses are logged, including passwords etc._
 
-## Logging
+If you are interested in using this and need a feature, please let me know.
+
+## Setup
+
+1. Install Python 3
+2. Clone repository
+3. Add to your autorun (Win+R type `shell:startup` + right-click drag `logger.pyw` into the folder and select "Create shortcut here"
+
+## Logger
 
 `python logger.pyw`
 
+Each keypress will be stored like this:
+
+```
+time delta key application
+1598479190.443632 811 'h' Notepad.exe
+```
+
+`delta` are the milliseconds since the last keypress
+
 ## Statistics
 
-`python Stats.py`
+### Show
+`python stats.py`
 
 ```time
 2020-08-26    70
@@ -23,14 +41,29 @@ DISCLAIMER: Currently *all* keypresses are logged, including passwords etc.
 2020-08-28    74
 2020-08-29    75
 Name: WPM, dtype: int32
-Show the stats in real time?
 ```
+
+### WPM (Words-per-minute) calculation :
+- ignoring deltas >2 seconds (probably a deliberate pause)
+- `60 seconds / (delta / 1000) / 5` (average english word length)
 
 ## TODO
 
-- GUI > Terminal > pyQT
-- auto-run on Windows start > explain how to add it to shell:autorun
-- more efficient logging (one file per day? > sqlite)
-- Don't record passwords
+### Small (near future)
+
+- Check out https://www.lightkey.io/
+- Avoid logging passwords - Idea: Have a regular expression filter that stops recording for n-chars if the beginning of the password is matched?)
+- Cache process-id and process-name to avoid extraction on each keypress
+- GUI? (Idea: pyQT)
+- Add to auto-run on Windows start
+- [Installer](https://cyrille.rossant.net/create-a-standalone-windows-installer-for-your-python-application/) 
+- More efficient logging & stats (Ideas: one file per day?  sqlite)
 - Website
-- Installer https://cyrille.rossant.net/create-a-standalone-windows-installer-for-your-python-application/
+
+### Far future
+
+- record a webcam shot on each keypress and analyze whether the correct finger was used to press the key
+- Show most common typos?
+- Auto-correct typos like [Universal AutoCorrect](http://www.biancolo.com/blog/autocorrect/) for [AutoHoteKey](https://www.autohotkey.com/)
+- Enable corrections on words that a further away (not only the last word like [Windows Typing Predictions](https://www.howtogeek.com/429702/how-to-enable-text-prediction-for-a-hardware-keyboard-on-windows-10/)
+
