@@ -51,7 +51,6 @@ Name: WPM, dtype: int32
 
 ### Small (near future)
 
-- Check out https://www.lightkey.io/
 - Avoid logging passwords - Idea: Have a regular expression filter that stops recording for n-chars if the beginning of the password is matched?)
 - Cache process-id and process-name to avoid extraction on each keypress
 - GUI? (Idea: pyQT)
@@ -62,14 +61,16 @@ Name: WPM, dtype: int32
 
 ### Far future
 
-- record a webcam shot on each keypress and analyze whether the correct finger was used to press the key
+- record a webcam shot on each keypress and analyze whether the correct finger was used to press the key, prevent the wrong key to register
 - Show most common typos?
 - Auto-correct typos
-- Enable corrections on words that a further away (not only the last word 
+- Enable corrections on words that a further away (not only the last word)
+- Enable "approximate" typing where you can really mess up the word you are typing
 
 ## Inspirations
 
 ### Tools 
+
 - [Universal AutoCorrect](http://www.biancolo.com/blog/autocorrect/) for [AutoHoteKey](https://www.autohotkey.com/)
 - [Windows Typing Predictions](https://www.howtogeek.com/429702/how-to-enable-text-prediction-for-a-hardware-keyboard-on-windows-10/)
 - [Lightkey](https://www.lightkey.io/free-text-editor)
