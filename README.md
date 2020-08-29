@@ -59,10 +59,12 @@ Name: WPM, dtype: int32
 - More efficient logging & stats (Ideas: one file per day?  sqlite)
 - Website
 
-### Far future
+### Correct Fingers?
+- record a webcam shot on each keypress and analyze whether the correct finger was used to press the key
+- prevent the wrong key to register
 
-- record a webcam shot on each keypress and analyze whether the correct finger was used to press the key, prevent the wrong key to register
-- Show most common typos?
+### Corrections
+- Show most common typos? (Idea: Learn typos on backspace presses)
 - Auto-correct typos
 - Enable corrections on words that a further away (not only the last word)
 - Enable "approximate" typing where you can really mess up the word you are typing
@@ -73,7 +75,7 @@ Name: WPM, dtype: int32
 
 - [Universal AutoCorrect](http://www.biancolo.com/blog/autocorrect/) for [AutoHoteKey](https://www.autohotkey.com/)
 - [Windows Typing Predictions](https://www.howtogeek.com/429702/how-to-enable-text-prediction-for-a-hardware-keyboard-on-windows-10/)
-- [Lightkey](https://www.lightkey.io/free-text-editor)
+- [Lightkey](https://www.lightkey.io)
 
 ## Websites
 
