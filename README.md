@@ -49,20 +49,18 @@ Name: WPM, dtype: int32
 
 ## TODO
 
-### Small (near future)
-
+### On-going
 - Enable/disable on hotkey Ctrl+Alt+R > Feedback? Console / Sound / System Notification (super easy) (1h, ~Monday night)
-- [Installer](https://cyrille.rossant.net/create-a-standalone-windows-installer-for-your-python-application/)
+- Build an [Installer](https://cyrille.rossant.net/create-a-standalone-windows-installer-for-your-python-application/)
 
-## Small (near future) 
+### Small (near future) 
 - GUI? (Idea: pyQT) (Enable/Disable, Calculate Stats)
 - Encrypt the .txt with a password? Windows User Account
-- Cache process-id and process-name to avoid extraction on each keypress
 - Avoid logging passwords - Idea: Have a regular expression filter that stops recording for n-chars if the beginning of the password is matched?)
+- Cache process-id and process-name to avoid extraction on each keypress
 - Santize:- don't store all the text,  opportuniyt bs,bs ty
-- Add to auto-run on Windows start
 - More efficient logging & stats (Ideas: one file per day?  sqlite)
-- Website
+- Add to auto-run on Windows start- Website
 
 ### Correct Fingers?
 - record a webcam shot on each keypress and analyze whether the correct finger was used to press the key
