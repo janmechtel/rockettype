@@ -67,7 +67,7 @@ Typos are a big slow down for many typists. Auto-Correct is a way to combat that
 - Suggest corrections on words that a further away not only the last word like other tools
 - _Approximate typing_ let's you really mess up the word you are typing, similar to swipe typing on mobile, which doesn't need much accurary to figure out the word you mean
 
-#### Tools for inspirations
+####  Auto-Correct Tools for inspiration
 
 - [Universal AutoCorrect](http://www.biancolo.com/blog/autocorrect/) for [AutoHoteKey](https://www.autohotkey.com/)
 - [Windows Typing Predictions](https://www.howtogeek.com/429702/how-to-enable-text-prediction-for-a-hardware-keyboard-on-windows-10/)
