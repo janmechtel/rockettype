@@ -51,27 +51,24 @@ def on_press(key):
     global should_log
     global toaster
 
+    # control-alt-x exits the program. Add GUI for this later
+    if str(key) == "<88>":
+        return False
+
     # control-alt-r toggles logging
     if str(key) == "<82>":
         should_log = not should_log # Inverse should_log
         enabled_string = "Enabled" if should_log else "Disabled"
 
-        enabled_desc = "Rocket type recording typed text"
-        disabled_desc = "Text recording paused..."
-
         # Show notification
-        toaster.show_toast(f"Rocket Type {enabled_string}",
-             enabled_desc if should_log else disabled_desc,
+        toaster.show_toast(f"RocketType {enabled_string}",
+             " ",
              icon_path="icon.ico", duration=3, threaded=True)
 
         return True # Don't continue to the rest of the function
 
     if not should_log:
         return True
-
-    # control-alt-x exits the program. Add GUI for this later
-    if str(key) == "<88>":
-        return False
 
     global previous_time
     current_time = time.time()
@@ -85,10 +82,9 @@ def on_press(key):
 
     previous_time = current_time
 
-
 with keyboard.Listener(on_press=on_press) as listener:
     listener.join()
 
-toaster.show_toast(f"Rocket Type Exited",
-     "Rocket Type has been closed and will no longer record keystrokes",
+toaster.show_toast(f"Exited",
+     "RocketType was closed and will not record keystrokes.",
      icon_path="icon.ico", duration=5, threaded=True)
