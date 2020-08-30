@@ -2,33 +2,19 @@
 
 A local keylogger to track typing statistics like WPM on Windows.
 
-![RocketType Screenshot](https://github.com/janmechtel/rockettype/blob/master/website/key_log_sample.png?raw=true)
-
 The log file can be imported into other software like Pandas, Excel, PowerBI etc. to calculate statistics over time etc.
 
 _DISCLAIMER: Currently **all** keypresses are logged, including passwords etc. See: [Avoid storing passwords](https://github.com/janmechtel/rockettype/issues/6)_ 
 
-If you are interested in using this and need a feature, please create an [issue](https://github.com/janmechtel/rockettype/issues).
+If you need a feature, please create an [issue](https://github.com/janmechtel/rockettype/issues).
 
-## Setup
+##
 
-1. Install Python 3
-2. Clone repository
-3. Add to your autorun (Win+R type `shell:startup` + right-click drag `logger.pyw` into the folder and select "Create shortcut here"
+1. Download & Install [RocketType_v0.1.exe](https://github.com/janmechtel/rockettype/releases/download/0.1-alpha/RocketType_0.1.exe)
+2. From Windows Start menu type `RocketType`
 
 ## Logger
 
-### Dependencies
-Requires `pynput` and `win10toast`. Install with the following command:
-`pip install pynput win10toast`
-
-### Starting
-`python logger.pyw`
-
-
-### Features
-
-#### Logging
 Each keypress will be stored like this:
 ```
 time delta key application
@@ -37,8 +23,8 @@ time delta key application
 
 `delta` are the milliseconds since the last keypress
 
-#### Hotkeys with notifications 
-* `Ctrl+Alt+R` - Toggles recording. Use it to temporarily disable the recording of keystrokes for passwords and such,
+### Hotkeys with notifications 
+* `Ctrl+Alt+R` - Toggles recording. Use it to temporarily disable the recording for passwords and such,
 * `Ctrl+Alt+X` - Exits
 
 ## Statistics
@@ -90,3 +76,13 @@ Typos are a big slow down for many typists. Auto-Correct is a way to combat that
 - [keybr.com](https://www.keybr.com/) typing practice
 - [zty.pe](https://zty.pe/) super cool typing game
 - [typelit.io](https://www.typelit.io/) Improve your typing by practicing on classic literature
+
+## Run localky
+
+1. Install Python 3
+2. Clone Repository
+3. Install requirements: `pip install pynput win10toast`
+4. Run `python logger.pyw`
+
+Optional: add to your autorun (Win+R type `shell:startup` + right-click drag `logger.pyw` into the folder and select "Create shortcut here"
+
