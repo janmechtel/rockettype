@@ -10,7 +10,7 @@ _DISCLAIMER: Currently **all** keypresses are logged, including passwords etc. S
 
 If you need a feature, please create an [issue](https://github.com/janmechtel/rockettype/issues).
 
-##
+## Installation
 
 1. Download & Install [RocketType_v0.1.exe](https://github.com/janmechtel/rockettype/releases/download/0.1-alpha/RocketType_0.1.exe)
 2. From Windows Start menu type `RocketType`
