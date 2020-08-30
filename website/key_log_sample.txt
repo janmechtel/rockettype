@@ -1,0 +1,6 @@
+time delta key application
+1598814882.777352 10958 'h' notepad.exe
+1598814882.957345 179 'e' notepad.exe
+1598814883.1283436 170 'l' notepad.exe
+1598814883.9272964 798 'l' notepad.exe
+1598814884.7268713 799 'o' notepad.exe
