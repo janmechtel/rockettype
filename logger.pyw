@@ -1,7 +1,20 @@
+#!python3.8
+# https://pynsist.readthedocs.io/en/latest/cfgfile.html#application-section
+import sys, os
+import site
+
+# taken from https://pynsist.readthedocs.io/en/latest/_modules/nsist.html
+scriptdir, script = os.path.split(__file__)
+installdir = scriptdir  # for compatibility with commands
+pkgdir = os.path.join(scriptdir, 'pkgs')
+# Ensure .pth files in pkgdir are handled properly
+site.addsitedir(pkgdir)
+sys.path.insert(0, pkgdir)
+
 import time
 
 import logging
-import sys, os
+import os
 import ctypes, ctypes.wintypes
 
 from pynput import keyboard # pip install pynput
