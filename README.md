@@ -79,7 +79,7 @@ Typos are a big slow down for many typists. Auto-Correct is a way to combat that
 - [zty.pe](https://zty.pe/) super cool typing game
 - [typelit.io](https://www.typelit.io/) Improve your typing by practicing on classic literature
 
-## Run localky
+## Run locally
 
 1. Install Python 3
 2. Clone Repository
