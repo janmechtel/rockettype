@@ -2,6 +2,8 @@
 
 A local keylogger to track typing statistics like WPM on Windows.
 
+![RocketType Screenshot](https://github.com/janmechtel/rockettype/blob/master/website/key_log_sample.png?raw=true)
+
 The log file can be imported into other software like Pandas, Excel, PowerBI etc. to calculate statistics over time etc.
 
 _DISCLAIMER: Currently **all** keypresses are logged, including passwords etc. See: [Avoid storing passwords](https://github.com/janmechtel/rockettype/issues/6)_ 
