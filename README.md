@@ -1,6 +1,6 @@
 # RocketType
 
-A windows keylooger to track typing statistics like WPM
+A windows keylogger to track typing statistics like WPM
 
 - logger - Stores each keypress into and ever growing file `outputs\key_log.txt`
 - Stats  - calculates WPM
