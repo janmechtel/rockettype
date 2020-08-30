@@ -1,15 +1,12 @@
 # RocketType
 
-A windows keylogger to track typing statistics like WPM
+A local keylogger to track typing statistics like WPM on Windows.
 
-- logger - Stores each keypress into and ever growing file `outputs\key_log.txt`
-- Stats  - calculates WPM
+The log file can be imported into other software like Pandas, Excel, PowerBI etc. to calculate statistics over time etc.
 
-The log file can be imported into other software like Pandas, Excel, PowerBI etc. to calculate other statistics
+_DISCLAIMER: Currently **all** keypresses are logged, including passwords etc. See: [Avoid storing passwords](https://github.com/janmechtel/rockettype/issues/6)_ 
 
-_DISCLAIMER: Currently **all** keypresses are logged, including passwords etc._
-
-If you are interested in using this and need a feature, please let me know.
+If you are interested in using this and need a feature, please create an [issue](https://github.com/janmechtel/rockettype/issues).
 
 ## Setup
 
@@ -19,21 +16,28 @@ If you are interested in using this and need a feature, please let me know.
 
 ## Logger
 
-#### Dependencies
+### Dependencies
 Requires `pynput` and `win10toast`. Install with the following command:
 `pip install pynput win10toast`
 
-#### Starting
+### Starting
 `python logger.pyw`
 
-Each keypress will be stored like this:
 
+### Features
+
+#### Logging
+Each keypress will be stored like this:
 ```
 time delta key application
 1598479190.443632 811 'h' Notepad.exe
 ```
 
 `delta` are the milliseconds since the last keypress
+
+#### Hotkeys with notifications 
+* `Ctrl+Alt+R` - Toggles recording. Use it to temporarily disable the recording of keystrokes for passwords and such,
+* `Ctrl+Alt+X` - Exits
 
 ## Statistics
 
@@ -52,42 +56,34 @@ Name: WPM, dtype: int32
 - ignoring deltas >2 seconds (probably a deliberate pause)
 - `60 seconds / (delta / 1000) / 5` (average english word length)
 
-## TODO
+## TODOs
 
-### Completed:
-- Enable/disable on hotkey Ctrl+Alt+R > Feedback? Console / Sound / System Notification (super easy) (1h, ~Monday night)
+The current scope is **convenient and safe logging** for statistics and personal data collection. See [open issues](https://github.com/janmechtel/rockettype/issues)
 
-### On-going
-- Build an [Installer](https://cyrille.rossant.net/create-a-standalone-windows-installer-for-your-python-application/)
+### Epic I: correct finger?
 
-### Small (near future)
-- GUI? (Idea: pyQT) (Enable/Disable, Calculate Stats)
-- Encrypt the .txt with a password? Windows User Account
-- Avoid logging passwords - Idea: Have a regular expression filter that stops recording for n-chars if the beginning of the password is matched?)
-- Cache process-id and process-name to avoid extraction on each keypress
-- Santize:- don't store all the text,  opportuniyt bs,bs ty
-- More efficient logging & stats (Ideas: one file per day?  sqlite)
-- Add to auto-run on Windows start- Website
+For faster touch typing the correct finger should be used. However, to _unlearn_ using the wrong finger is quite a challenge, especially when the habit is in muscle memory already. The idea is to:
+ 
+- Record a webcam shot on each keypress
+- Analyze whether the correct finger was used to press the key either through openCV or deep learning
+- Prevent the wrong key to register
 
-### Epic: Correct Fingers?
-- record a webcam shot on each keypress and analyze whether the correct finger was used to press the key
-- prevent the wrong key to register
+### Epic II: Auto-Correct
 
-### Epic: AutoCorrections
+Typos are a big slow down for many typists. Auto-Correct is a way to combat that. 
+
 - Show most common typos? (Idea: Learn typos on backspace presses)
-- Auto-correct typos
-- Enable corrections on words that a further away (not only the last word)
-- Enable "approximate" typing where you can really mess up the word you are typing
+- Auto-correct typos - probably this can be more aggressive compared to other tools.
+- Suggest corrections on words that a further away not only the last word like other tools
+- _Approximate typing_ let's you really mess up the word you are typing, similar to swipe typing on mobile, which doesn't need much accurary to figure out the word you mean
 
-## Inspirations
-
-### Tools
+#### Tools for inspirations
 
 - [Universal AutoCorrect](http://www.biancolo.com/blog/autocorrect/) for [AutoHoteKey](https://www.autohotkey.com/)
 - [Windows Typing Predictions](https://www.howtogeek.com/429702/how-to-enable-text-prediction-for-a-hardware-keyboard-on-windows-10/)
 - [Lightkey](https://www.lightkey.io)
 
-### Websites
+## Websites
 
 - [keybr.com](https://www.keybr.com/) typing practice
 - [zty.pe](https://zty.pe/) super cool typing game
