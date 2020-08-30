@@ -19,6 +19,11 @@ If you are interested in using this and need a feature, please let me know.
 
 ## Logger
 
+#### Dependencies
+Requires `pynput` and `win10toast`. Install with the following command:
+`pip install pynput win10toast`
+
+#### Starting
 `python logger.pyw`
 
 Each keypress will be stored like this:
@@ -49,11 +54,13 @@ Name: WPM, dtype: int32
 
 ## TODO
 
-### On-going
+### Completed:
 - Enable/disable on hotkey Ctrl+Alt+R > Feedback? Console / Sound / System Notification (super easy) (1h, ~Monday night)
+
+### On-going
 - Build an [Installer](https://cyrille.rossant.net/create-a-standalone-windows-installer-for-your-python-application/)
 
-### Small (near future) 
+### Small (near future)
 - GUI? (Idea: pyQT) (Enable/Disable, Calculate Stats)
 - Encrypt the .txt with a password? Windows User Account
 - Avoid logging passwords - Idea: Have a regular expression filter that stops recording for n-chars if the beginning of the password is matched?)
@@ -74,7 +81,7 @@ Name: WPM, dtype: int32
 
 ## Inspirations
 
-### Tools 
+### Tools
 
 - [Universal AutoCorrect](http://www.biancolo.com/blog/autocorrect/) for [AutoHoteKey](https://www.autohotkey.com/)
 - [Windows Typing Predictions](https://www.howtogeek.com/429702/how-to-enable-text-prediction-for-a-hardware-keyboard-on-windows-10/)
