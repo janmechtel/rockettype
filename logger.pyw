@@ -91,4 +91,4 @@ with keyboard.Listener(on_press=on_press) as listener:
 
 toaster.show_toast(f"Rocket Type Exited",
      "Rocket Type has been closed and will no longer record keystrokes",
-     icon_path="icon.ico", duration=5)
+     icon_path="icon.ico", duration=5, threaded=True)
