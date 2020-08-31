@@ -39,11 +39,17 @@ previous_time = time.time()
 
 log_dir = "outputs/"
 
+# Create an outputs directory if one does not already exist
 try:
-    os.mkdir(log_dir) # Confirm directory existst
-    open(log_dir + "key_log.txt", "a+").close() # Confirm file exist
+    os.mkdir(log_dir)
 except:
     pass
+
+# Create file w/ header if non existant
+if not os.path.exists(log_dir + "key_log.txt"):
+    with open(log_dir + "key_log.txt", "w+") as new_file:
+        new_file.write("time delta key application\n")
+
 logging.basicConfig(filename=(log_dir + "key_log.txt"), level=logging.DEBUG, format='%(message)s')
 
 should_log = True
@@ -87,6 +93,8 @@ def on_press(key):
 
     # keybinds that should be ignored when recording is off go here
 
+    # SUGGESTION: Ignore keys that are longer than one character long that aren't space (ex: alt)
+
     global previous_time
     current_time = time.time()
     delta = int((current_time - previous_time)*1000)
@@ -94,7 +102,11 @@ def on_press(key):
 
     name = "{current_time} {delta} {key} {process}".format(current_time=current_time,delta=delta,key=str(key), process=process)
     filename = log_dir + name + ".jpg"
-    logging.info(name)
+
+    # Only log name to file if there are 4 columns. Otherwise it will break the stats tool if an error occurs
+    if len(name.split(" ")) == 4:
+        logging.info(name)
+
     print(name)
 
     previous_time = current_time
