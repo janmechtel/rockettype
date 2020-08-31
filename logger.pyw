@@ -51,6 +51,8 @@ def on_press(key):
     global should_log
     global toaster
 
+    # keybinds that always should be dealt with should go up here
+
     # control-alt-x exits the program. Add GUI for this later
     if str(key) == "<88>":
         return False
@@ -62,13 +64,15 @@ def on_press(key):
 
         # Show notification
         toaster.show_toast(f"RocketType {enabled_string}",
-             " ",
-             icon_path="icon.ico", duration=3, threaded=True)
+            " ",
+            icon_path="icon.ico", duration=3, threaded=True)
 
         return True # Don't continue to the rest of the function
 
     if not should_log:
         return True
+
+    # keybinds that should be ignored when recording is off go here
 
     global previous_time
     current_time = time.time()
@@ -83,8 +87,11 @@ def on_press(key):
     previous_time = current_time
 
 with keyboard.Listener(on_press=on_press) as listener:
+    toaster.show_toast("RocketType Started and Enabled",
+        " ",
+        icon_path="icon.ico", duration=3, threaded=True)
     listener.join()
 
-toaster.show_toast(f"Exited",
+toaster.show_toast("Exited",
      "RocketType was closed and will not record keystrokes.",
      icon_path="icon.ico", duration=5, threaded=True)
