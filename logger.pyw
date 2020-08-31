@@ -7,6 +7,8 @@ import ctypes, ctypes.wintypes
 from pynput import keyboard # pip install pynput
 from win10toast import ToastNotifier # pip install win10toast
 
+import stats
+
 Psapi = ctypes.WinDLL('Psapi.dll')
 GetProcessImageFileName = Psapi.GetProcessImageFileNameA
 GetProcessImageFileName.restype = ctypes.wintypes.DWORD
@@ -54,11 +56,22 @@ def on_press(key):
     # keybinds that always should be dealt with should go up here
 
     # control-alt-x exits the program. Add GUI for this later
-    if str(key) == "<88>":
+    if str(key) == "<88>": # ctrl-alt-x
         return False
 
+    # control-alt-t prints statistics and sends a notification with statistics too
+    if str(key) == "<84>": # ctrl-alt-t
+        current_stats = stats.get_stats()
+
+        print(current_stats)
+
+        toaster.show_toast(f"RocketType Statistics",
+            str(current_stats),
+            icon_path="icon.ico", duration=7, threaded=False)
+        return True
+
     # control-alt-r toggles logging
-    if str(key) == "<82>":
+    if str(key) == "<82>": # ctrl-alt-r
         should_log = not should_log # Inverse should_log
         enabled_string = "Enabled" if should_log else "Disabled"
 
