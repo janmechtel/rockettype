@@ -88,3 +88,10 @@ Typos are a big slow down for many typists. Auto-Correct is a way to combat that
 
 Optional: add to your autorun (Win+R type `shell:startup` + right-click drag `logger.pyw` into the folder and select "Create shortcut here"
 
+
+## How to release
+
+1. Install NSIS (?)
+2. Make sure you hack pyapp.nsi as descriped in the my_pyapp.nsi
+3. `python -m nsist installer.cfg`
+4. [Create a new release](https://github.com/janmechtel/rockettype/releases/new) and upload the .exe 
