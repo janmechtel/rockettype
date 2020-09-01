@@ -1,7 +1,13 @@
 #!python3.8
 # https://pynsist.readthedocs.io/en/latest/cfgfile.html#application-section
-import sys, os
+import sys, os, time
 import site
+import ctypes, ctypes.wintypes
+
+from pynput import keyboard # pip install pynput
+from win10toast import ToastNotifier # pip install win10toast
+
+import stats
 
 # taken from https://pynsist.readthedocs.io/en/latest/_modules/nsist.html
 scriptdir, script = os.path.split(__file__)
@@ -11,16 +17,6 @@ pkgdir = os.path.join(scriptdir, 'pkgs')
 site.addsitedir(pkgdir)
 sys.path.insert(0, pkgdir)
 
-import time
-
-import logging
-import os
-import ctypes, ctypes.wintypes
-
-from pynput import keyboard # pip install pynput
-from win10toast import ToastNotifier # pip install win10toast
-
-import stats
 
 Psapi = ctypes.WinDLL('Psapi.dll')
 GetProcessImageFileName = Psapi.GetProcessImageFileNameA
@@ -65,7 +61,8 @@ if not os.path.exists(log_dir + "key_log.txt"):
 
 debug_mode = os.path.exists(log_dir + "/DEBUG")
 
-logging.basicConfig(filename=(log_dir + "key_log.txt"), level=logging.DEBUG, format='%(message)s')
+# Open a file for logging
+logging = open(log_dir + 'key_log.txt', 'a+')
 
 should_log = True
 toaster = ToastNotifier()
@@ -122,7 +119,7 @@ def on_press(key):
 
     # Only log name to file if there are 4 columns. Otherwise it will break the stats tool if an error occurs
     if len(name.split(" ")) == 4:
-        logging.info(name)
+        logging.write(name + '\n')
 
     print(name)
 
@@ -137,3 +134,5 @@ with keyboard.Listener(on_press=on_press) as listener:
 toaster.show_toast("Exited",
      "RocketType was closed and will not record keystrokes.",
      icon_path="icon.ico", duration=5, threaded=True)
+
+logging.close()
