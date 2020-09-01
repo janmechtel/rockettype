@@ -63,6 +63,8 @@ if not os.path.exists(log_dir + "key_log.txt"):
     with open(log_dir + "key_log.txt", "w+") as new_file:
         new_file.write("time delta key application\n")
 
+debug_mode = os.path.exists(log_dir + "/DEBUG")
+
 logging.basicConfig(filename=(log_dir + "key_log.txt"), level=logging.DEBUG, format='%(message)s')
 
 should_log = True
@@ -86,7 +88,7 @@ def on_press(key):
 
         toaster.show_toast(f"RocketType Statistics",
             str(current_stats),
-            icon_path="icon.ico", duration=7, threaded=False)
+            icon_path="icon.ico", duration=7, threaded=True)
         return True
 
     # control-alt-r toggles logging
@@ -112,6 +114,8 @@ def on_press(key):
     current_time = time.time()
     delta = int((current_time - previous_time)*1000)
     process = get_active_process()
+
+    key = key if debug_mode else "'hidden'" # Only log actual key strokes for debugging as of now
 
     name = "{current_time} {delta} {key} {process}".format(current_time=current_time,delta=delta,key=str(key), process=process)
     filename = log_dir + name + ".jpg"
