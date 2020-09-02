@@ -1,6 +1,7 @@
 #!python3.8
 # https://pynsist.readthedocs.io/en/latest/cfgfile.html#application-section
 import sys, os, time
+import logging
 import site
 import ctypes, ctypes.wintypes
 from threading import Lock
@@ -68,7 +69,8 @@ def __init__():
     env['debug_mode'] = os.path.exists(env['log_dir'] + "/DEBUG")
 
     # Open a file for logging
-    env['logging'] = open(env['log_dir'] + 'key_log.txt', 'a+')
+    env['output_file'] = open(env['log_dir'] + 'key_log.txt', 'a+')
+    logging.basicConfig(filename=(env['log_dir'] + "exceptions.txt"), level=logging.DEBUG, format='%(message)s')
 
     env['should_log'] = True
     env['toaster'] = ToastNotifier()
@@ -122,25 +124,24 @@ def on_press(key):
 
     # Only log name to file if there are 4 columns. Otherwise it will break the stats tool if an error occurs
     if len(name.split(" ")) == 4:
-        env['logging'].write(name + '\n')
+        env['output_file'].write(name + '\n')
 
     print(name)
 
     env['previous_time'] = current_time
 
 def async_on_press(key):
-    # Locks the env object so that other classes do not try and write / read from it while on_press is using it
+    # Locks the env object so that other classes do not try and write / read
+    # from it while on_press is using it
     env_lock.acquire()
+    ret = True # So that if on_press fails, we still are able to return something
     try:
         ret = on_press(key)
-    except:
-        pass
+    except Exception as e:
+        logging.info(e)
 
     env_lock.release()
-    try:
-        return ret
-    except:
-        pass
+    return ret
 
 def start_keylogger():
     with keyboard.Listener(on_press=async_on_press) as listener:
@@ -148,8 +149,6 @@ def start_keylogger():
             " ",
             icon_path="icon.ico", duration=3, threaded=True)
         listener.join()
-
-    env['logging'].close()
 
 
 if __name__ == '__main__':
@@ -159,6 +158,8 @@ if __name__ == '__main__':
 
     app = gui(keylogger, env, env_lock)
     app.exec_()
+
+    env['output_file'].close()
 
     env['toaster'].show_toast("Exited",
          "RocketType was closed and will not record keystrokes.",
