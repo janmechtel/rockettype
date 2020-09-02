@@ -6,36 +6,37 @@ A local keylogger to track typing statistics like WPM on Windows.
 
 The log file can be imported into other software like Pandas, Excel, PowerBI etc. to calculate statistics over time etc.
 
-_DISCLAIMER: Currently **all** keypresses are logged, including passwords etc. See: [Avoid storing passwords](https://github.com/janmechtel/rockettype/issues/6)_
-
-If you need a feature, please create an [issue](https://github.com/janmechtel/rockettype/issues).
+If you are looking for a particular feature, please create an [issue](https://github.com/janmechtel/rockettype/issues).
 
 ## Installation
 
-1. Download & Install [RocketType_v0.1.exe](https://github.com/janmechtel/rockettype/releases/download/0.1-alpha/RocketType_0.1.exe)
-2. From Windows Start menu type `RocketType`
+1. Download & Install [RocketType_vx.x.exe](https://github.com/janmechtel/rockettype/releases)
+2. RocketType will run after installation
+3. To run again: type `RocketType` in Windows Start menu 
+4. Optional: add to your autorun (Win+R type shell:startup + drag the `RocketType` shorctu into the folder
 
 ## Logger
 
 Each keypress will be stored like this:
 ```
 time delta key application
-1598479190.443632 811 'h' Notepad.exe
+1598479190.443632 811 'hidden' Notepad.exe
 ```
-
-`delta` are the milliseconds since the last keypress
-
-As of right now, keypresses will only store the time, delta, and application
-and record `'hidden'` for each key press. To record the keypresses, create a
-file in the automatically generated output folder called `DEBUG`. 
+- `time` is epoch seconds 
+- `delta` are the milliseconds since the last keypress
+- `key` is `'hidden'` for each key press, unless there is a `output/DEBUG/`folder.
+- `application` is the name of the forgrounds window procress
 
 ### Hotkeys with notifications
 * `Ctrl+Alt+R` - Toggles recording. Use it to temporarily disable the recording for passwords and such,
+* `Ctrl+Alt+T` - Shows statistics
 * `Ctrl+Alt+X` - Exits
 
 ## Statistics
 
 ### Show
+
+Press `Ctrl+Alt+T` or 
 `python stats.py`
 
 ```time
@@ -88,10 +89,11 @@ Typos are a big slow down for many typists. Auto-Correct is a way to combat that
 1. Install Python 3
 2. Clone Repository
 3. Install requirements: `pip install pynput win10toast PyQt5`
-4. Run `python logger.pyw`
+4. Optional: Create a DEBUG folder `mkdir output\DEBUG` 
+5. Run `python logger.pyw`
+6. Optional: add to your autorun (Win+R type `shell:startup` + right-click drag `logger.pyw` into the folder and select "Create shortcut here"
 
-Optional: add to your autorun (Win+R type `shell:startup` + right-click drag `logger.pyw` into the folder and select "Create shortcut here"
-
+_DISCLAIMER: In Debug mode **all** keypresses are logged, including passwords etc. See: [Avoid storing passwords](https://github.com/janmechtel/rockettype/issues/6)_
 
 ## How to release
 
