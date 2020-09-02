@@ -25,6 +25,10 @@ time delta key application
 
 `delta` are the milliseconds since the last keypress
 
+As of right now, keypresses will only store the time, delta, and application
+and record `'hidden'` for each key press. To record the keypresses, create a
+file in the automatically generated output folder called `DEBUG`. 
+
 ### Hotkeys with notifications
 * `Ctrl+Alt+R` - Toggles recording. Use it to temporarily disable the recording for passwords and such,
 * `Ctrl+Alt+X` - Exits
