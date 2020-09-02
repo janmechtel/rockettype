@@ -10,8 +10,10 @@ If you are looking for a particular feature, please create an [issue](https://gi
 
 ## Installation
 
-1. Download & Install [RocketType_v0.1.exe](https://github.com/janmechtel/rockettype/releases/download/0.1-alpha/RocketType_0.1.exe)
-2. From Windows Start menu type `RocketType`
+1. Download & Install [RocketType_vx.x.exe](https://github.com/janmechtel/rockettype/releases)
+2. RocketType will run after installation
+3. To run again: type `RocketType` in Windows Start menu 
+4. Optional: add to your autorun (Win+R type shell:startup + drag the `RocketType` shorctu into the folder
 
 ## Logger
 
