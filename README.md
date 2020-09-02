@@ -6,7 +6,7 @@ A local keylogger to track typing statistics like WPM on Windows.
 
 The log file can be imported into other software like Pandas, Excel, PowerBI etc. to calculate statistics over time etc.
 
-_DISCLAIMER: Currently **all** keypresses are logged, including passwords etc. See: [Avoid storing passwords](https://github.com/janmechtel/rockettype/issues/6)_ 
+_DISCLAIMER: Currently **all** keypresses are logged, including passwords etc. See: [Avoid storing passwords](https://github.com/janmechtel/rockettype/issues/6)_
 
 If you need a feature, please create an [issue](https://github.com/janmechtel/rockettype/issues).
 
@@ -25,7 +25,7 @@ time delta key application
 
 `delta` are the milliseconds since the last keypress
 
-### Hotkeys with notifications 
+### Hotkeys with notifications
 * `Ctrl+Alt+R` - Toggles recording. Use it to temporarily disable the recording for passwords and such,
 * `Ctrl+Alt+X` - Exits
 
@@ -53,14 +53,14 @@ The current scope is **convenient and safe logging** for statistics and personal
 ### Epic I: correct finger?
 
 For faster touch typing the correct finger should be used. However, to _unlearn_ using the wrong finger is quite a challenge, especially when the habit is in muscle memory already. The idea is to:
- 
+
 - Record a webcam shot on each keypress
 - Analyze whether the correct finger was used to press the key either through openCV or deep learning
 - Prevent the wrong key to register
 
 ### Epic II: Auto-Correct
 
-Typos are a big slow down for many typists. Auto-Correct is a way to combat that. 
+Typos are a big slow down for many typists. Auto-Correct is a way to combat that.
 
 - Show most common typos? (Idea: Learn typos on backspace presses)
 - Auto-correct typos - probably this can be more aggressive compared to other tools.
@@ -83,7 +83,7 @@ Typos are a big slow down for many typists. Auto-Correct is a way to combat that
 
 1. Install Python 3
 2. Clone Repository
-3. Install requirements: `pip install pynput win10toast`
+3. Install requirements: `pip install pynput win10toast PyQt5`
 4. Run `python logger.pyw`
 
 Optional: add to your autorun (Win+R type `shell:startup` + right-click drag `logger.pyw` into the folder and select "Create shortcut here"
@@ -94,4 +94,4 @@ Optional: add to your autorun (Win+R type `shell:startup` + right-click drag `lo
 1. Install NSIS (?)
 2. Make sure you hack pyapp.nsi as descriped in the my_pyapp.nsi
 3. `python -m nsist installer.cfg`
-4. [Create a new release](https://github.com/janmechtel/rockettype/releases/new) and upload the .exe 
+4. [Create a new release](https://github.com/janmechtel/rockettype/releases/new) and upload the .exe

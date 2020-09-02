@@ -3,74 +3,78 @@
 import sys, os, time
 import site
 import ctypes, ctypes.wintypes
+from threading import Lock
 
 from pynput import keyboard # pip install pynput
 from win10toast import ToastNotifier # pip install win10toast
 
 import stats
+from logger_view import *
+from logger_model import *
 
-# taken from https://pynsist.readthedocs.io/en/latest/_modules/nsist.html
-scriptdir, script = os.path.split(__file__)
-installdir = scriptdir  # for compatibility with commands
-pkgdir = os.path.join(scriptdir, 'pkgs')
-# Ensure .pth files in pkgdir are handled properly
-site.addsitedir(pkgdir)
-sys.path.insert(0, pkgdir)
-
-
-Psapi = ctypes.WinDLL('Psapi.dll')
-GetProcessImageFileName = Psapi.GetProcessImageFileNameA
-GetProcessImageFileName.restype = ctypes.wintypes.DWORD
-
-Kernel32 = ctypes.WinDLL('kernel32.dll')
-OpenProcess = Kernel32.OpenProcess
-OpenProcess.restype = ctypes.wintypes.HANDLE
-CloseHandle = Kernel32.CloseHandle
-
-pid = ctypes.wintypes.DWORD()
-MAX_PATH = 260
-PROCESS_QUERY_INFORMATION = 0x0400
+# Stores all global variables for the keylogger, such as logging file, debug mode, and keyboard interfaces
+env = {}
+env_lock = Lock()
 
 def get_active_process():
     active = ctypes.windll.user32.GetForegroundWindow()
-    active_window = ctypes.windll.user32.GetWindowThreadProcessId(active,ctypes.byref(pid))
+    active_window = ctypes.windll.user32.GetWindowThreadProcessId(active,ctypes.byref(env['pid']))
 
-    hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, False, pid)
+    hProcess = env['OpenProcess'](env['PROCESS_QUERY_INFORMATION'], False, env['pid'])
     if hProcess:
-        ImageFileName = (ctypes.c_char*MAX_PATH)()
-        if GetProcessImageFileName(hProcess, ImageFileName, MAX_PATH)>0:
+        ImageFileName = (ctypes.c_char*env['MAX_PATH'])()
+        if env['GetProcessImageFileName'](hProcess, ImageFileName, env['MAX_PATH'])>0:
             filename = os.path.basename(ImageFileName.value)
-        CloseHandle(hProcess)
+        env['CloseHandle'](hProcess)
     return filename.decode('UTF-8')
 
+def __init__():
+    # TODO: Store all this stuff in an object
+    # taken from https://pynsist.readthedocs.io/en/latest/_modules/nsist.html
+    scriptdir, script = os.path.split(__file__)
+    installdir = scriptdir  # for compatibility with commands
+    pkgdir = os.path.join(scriptdir, 'pkgs')
+    # Ensure .pth files in pkgdir are handled properly
+    site.addsitedir(pkgdir)
+    sys.path.insert(0, pkgdir)
 
-previous_time = time.time()
+    Psapi = ctypes.WinDLL('Psapi.dll')
+    env['GetProcessImageFileName'] = Psapi.GetProcessImageFileNameA
+    env['GetProcessImageFileName.restype'] = ctypes.wintypes.DWORD
 
-log_dir = "outputs/"
+    Kernel32 = ctypes.WinDLL('kernel32.dll')
+    env['OpenProcess'] = Kernel32.OpenProcess
+    env['OpenProcess.restype'] = ctypes.wintypes.HANDLE
+    env['CloseHandle'] = Kernel32.CloseHandle
 
-# Create an outputs directory if one does not already exist
-try:
-    os.mkdir(log_dir)
-except:
-    pass
+    env['pid'] = ctypes.wintypes.DWORD()
+    env['MAX_PATH'] = 260
+    env['PROCESS_QUERY_INFORMATION'] = 0x0400
+    env['previous_time'] = time.time()
 
-# Create file w/ header if non existant
-if not os.path.exists(log_dir + "key_log.txt"):
-    with open(log_dir + "key_log.txt", "w+") as new_file:
-        new_file.write("time delta key application\n")
+    env['log_dir'] = "outputs/"
 
-debug_mode = os.path.exists(log_dir + "/DEBUG")
+    # Create an outputs directory if one does not already exist
+    try:
+        os.mkdir(env['log_dir'])
+    except:
+        pass
 
-# Open a file for logging
-logging = open(log_dir + 'key_log.txt', 'a+')
+    # Create file w/ header if non existant
+    if not os.path.exists(env['log_dir'] + "key_log.txt"):
+        with open(env['log_dir'] + "key_log.txt", "w+") as new_file:
+            new_file.write("time delta key application\n")
 
-should_log = True
-toaster = ToastNotifier()
+    env['debug_mode'] = os.path.exists(env['log_dir'] + "/DEBUG")
+
+    # Open a file for logging
+    env['logging'] = open(env['log_dir'] + 'key_log.txt', 'a+')
+
+    env['should_log'] = True
+    env['toaster'] = ToastNotifier()
+
 
 def on_press(key):
-    global should_log
-    global toaster
-
     # keybinds that always should be dealt with should go up here
 
     # control-alt-x exits the program. Add GUI for this later
@@ -83,56 +87,79 @@ def on_press(key):
 
         print(current_stats)
 
-        toaster.show_toast(f"RocketType Statistics",
+        env['toaster'].show_toast(f"RocketType Statistics",
             str(current_stats),
             icon_path="icon.ico", duration=7, threaded=True)
         return True
 
     # control-alt-r toggles logging
     if str(key) == "<82>": # ctrl-alt-r
-        should_log = not should_log # Inverse should_log
-        enabled_string = "Enabled" if should_log else "Disabled"
+        env['should_log'] = not env['should_log'] # Inverse should_log
+        enabled_string = "Enabled" if env['should_log'] else "Disabled"
 
         # Show notification
-        toaster.show_toast(f"RocketType {enabled_string}",
+        env['toaster'].show_toast(f"RocketType {enabled_string}",
             " ",
             icon_path="icon.ico", duration=3, threaded=True)
 
         return True # Don't continue to the rest of the function
 
-    if not should_log:
+    if not env['should_log']:
         return True
 
     # keybinds that should be ignored when recording is off go here
 
     # SUGGESTION: Ignore keys that are longer than one character long that aren't space (ex: alt)
 
-    global previous_time
     current_time = time.time()
-    delta = int((current_time - previous_time)*1000)
+    delta = int((current_time - env['previous_time'])*1000)
     process = get_active_process()
 
-    key = key if debug_mode else "'hidden'" # Only log actual key strokes for debugging as of now
+    key = key if env['debug_mode'] else "'hidden'" # Only log actual key strokes for debugging as of now
 
     name = "{current_time} {delta} {key} {process}".format(current_time=current_time,delta=delta,key=str(key), process=process)
-    filename = log_dir + name + ".jpg"
+    filename = env['log_dir'] + name + ".jpg"
 
     # Only log name to file if there are 4 columns. Otherwise it will break the stats tool if an error occurs
     if len(name.split(" ")) == 4:
-        logging.write(name + '\n')
+        env['logging'].write(name + '\n')
 
     print(name)
 
-    previous_time = current_time
+    env['previous_time'] = current_time
 
-with keyboard.Listener(on_press=on_press) as listener:
-    toaster.show_toast("RocketType Started and Enabled",
-        " ",
-        icon_path="icon.ico", duration=3, threaded=True)
-    listener.join()
+def async_on_press(key):
+    # Locks the env object so that other classes do not try and write / read from it while on_press is using it
+    env_lock.acquire()
+    try:
+        ret = on_press(key)
+    except:
+        pass
 
-toaster.show_toast("Exited",
-     "RocketType was closed and will not record keystrokes.",
-     icon_path="icon.ico", duration=5, threaded=True)
+    env_lock.release()
+    try:
+        return ret
+    except:
+        pass
 
-logging.close()
+def start_keylogger():
+    with keyboard.Listener(on_press=async_on_press) as listener:
+        env['toaster'].show_toast("RocketType Started and Enabled",
+            " ",
+            icon_path="icon.ico", duration=3, threaded=True)
+        listener.join()
+
+    env['logging'].close()
+
+
+if __name__ == '__main__':
+    __init__()
+    keylogger = logger_thread()
+    keylogger.set_func(start_keylogger)
+
+    app = gui(keylogger, env, env_lock)
+    app.exec_()
+
+    env['toaster'].show_toast("Exited",
+         "RocketType was closed and will not record keystrokes.",
+         icon_path="icon.ico", duration=5, threaded=True)
