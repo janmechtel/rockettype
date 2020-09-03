@@ -99,5 +99,6 @@ _DISCLAIMER: In Debug mode **all** keypresses are logged, including passwords et
 
 1. Install NSIS (?)
 2. Make sure you hack pyapp.nsi as descriped in the my_pyapp.nsi
+3. Modify your local pynsist/wheels.py as described [here](https://github.com/janmechtel/rockettype/issues/18#issuecomment-686708771)
 3. `python -m nsist installer.cfg`
 4. [Create a new release](https://github.com/janmechtel/rockettype/releases/new) and upload the .exe
