@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-import stats
+import keylogger.logger_stats as stats
 
 def init_app():
     return QApplication([])
@@ -21,12 +21,16 @@ def init_interface():
     return (status, wpm, window)
 
 def get_wpm_by_day():
-    statstr = str(stats.get_stats())
-    statstr = "\n".join(statstr.split("\n")[1:-1])
-    return "WPM by day:\n" + statstr
+    try:
+        statstr = str(stats.get_stats())
+        statstr = "\n".join(statstr.split("\n")[1:-1])
+        return "WPM by day:\n" + statstr
+    except:
+        return "No data yet"
 
-def init_systray():
-    tray = QSystemTrayIcon(QIcon("icon.ico"))
+
+def init_systray(env):
+    tray = QSystemTrayIcon(QIcon(env['icon_file']))
     menu = QMenu()
     pauseAction = menu.addAction("Toggle Recording")
     statsAction = menu.addAction("See statistics")
