@@ -36,8 +36,7 @@ time delta key application
 
 ### Show
 
-Press `Ctrl+Alt+T` or
-`python stats.py`
+Press `Ctrl+Alt+T` it will return  
 
 ```time
 2020-08-26    70
@@ -47,7 +46,7 @@ Press `Ctrl+Alt+T` or
 Name: WPM, dtype: int32
 ```
 
-### WPM (Words-per-minute) calculation :
+### WPM (Words-per-minute) calculation
 - ignoring deltas >2 seconds (probably a deliberate pause)
 - `60 seconds / (delta / 1000) / 5` (average english word length)
 
