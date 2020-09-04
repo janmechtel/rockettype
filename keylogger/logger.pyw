@@ -171,7 +171,7 @@ def main():
     keylogger = logger_thread()
     keylogger.set_func(start_keylogger)
 
-    print(env['icon_file'])
+    #print(env['icon_file'])
 
     app = gui(keylogger, env, env_lock)
     app.exec_()
