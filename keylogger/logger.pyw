@@ -9,9 +9,9 @@ from threading import Lock
 from pynput import keyboard # pip install pynput
 from win10toast import ToastNotifier # pip install win10toast
 
-import stats
-from logger_view import *
-from logger_model import *
+from keylogger.logger_stats import get_stats
+from keylogger.logger_view import *
+from keylogger.logger_model import *
 
 # Stores all global variables for the keylogger, such as logging file, debug mode, and keyboard interfaces
 env = {}
@@ -74,6 +74,8 @@ def __init__():
 
     env['should_log'] = True
     env['toaster'] = ToastNotifier()
+    env['icon_file'] = data_file_path = os.path.join(os.path.dirname(__file__), 'icon.ico')
+
 
 
 def on_press(key):
@@ -85,13 +87,16 @@ def on_press(key):
 
     # control-alt-t prints statistics and sends a notification with statistics too
     if str(key) == "<84>": # ctrl-alt-t
-        current_stats = stats.get_stats()
+        current_stats = logger_stats.get_stats()
 
         print(current_stats)
 
-        env['toaster'].show_toast(f"RocketType Statistics",
-            str(current_stats),
-            icon_path="icon.ico", duration=7, threaded=True)
+        try:
+            env['toaster'].show_toast(f"RocketType Statistics",
+                str(current_stats),
+                env['icon_file'], duration=7, threaded=True)
+        except:
+            pass
         return True
 
     # control-alt-r toggles logging
@@ -100,9 +105,14 @@ def on_press(key):
         enabled_string = "Enabled" if env['should_log'] else "Disabled"
 
         # Show notification
-        env['toaster'].show_toast(f"RocketType {enabled_string}",
-            " ",
-            icon_path="icon.ico", duration=3, threaded=True)
+        try:
+            env['toaster'].show_toast(f"RocketType {enabled_string}",
+                " ",
+                icon_path=env['icon_file'], duration=3, threaded=True)
+        except:
+            pass
+
+        time.sleep(1)
 
         return True # Don't continue to the rest of the function
 
@@ -144,23 +154,36 @@ def async_on_press(key):
     return ret
 
 def start_keylogger():
+
     with keyboard.Listener(on_press=async_on_press) as listener:
-        env['toaster'].show_toast("RocketType Started and Enabled",
-            " ",
-            icon_path="icon.ico", duration=3, threaded=True)
+        env_lock.acquire()
+        try:
+            env['toaster'].show_toast("RocketType Started and Enabled",
+                " ",
+                icon_path=env['icon_file'], duration=3, threaded=False)
+        except:
+            pass
+        env_lock.release()
         listener.join()
 
-
-if __name__ == '__main__':
+def main():
     __init__()
     keylogger = logger_thread()
     keylogger.set_func(start_keylogger)
+
+    #print(env['icon_file'])
 
     app = gui(keylogger, env, env_lock)
     app.exec_()
 
     env['output_file'].close()
 
-    env['toaster'].show_toast("Exited",
-         "RocketType was closed and will not record keystrokes.",
-         icon_path="icon.ico", duration=5, threaded=True)
+    try:
+        env['toaster'].show_toast("Exited",
+             "RocketType was closed and will not record keystrokes.",
+             icon_path=env['icon_file'], duration=5, threaded=False)
+    except:
+        pass
+
+if __name__ == '__main__':
+    main()

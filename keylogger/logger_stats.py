@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[72]:
 import pandas as pd
 from datetime import datetime, timedelta
 
@@ -29,7 +25,7 @@ def get_stats():
 
 
     df['CPM'] = 60/(df['delta']/1000)
-    df['WPM'] = df['CPM']/5 
+    df['WPM'] = df['CPM']/5
     #df
 
 
