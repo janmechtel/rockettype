@@ -53,7 +53,7 @@ def __init__():
     env['PROCESS_QUERY_INFORMATION'] = 0x0400
     env['previous_time'] = time.time()
 
-    env['log_dir'] = "outputs/"
+    env['log_dir'] = "RocketType/"
 
     # Create an outputs directory if one does not already exist
     try:

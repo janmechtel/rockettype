@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 def get_stats():
     #read the file
-    df = pd.read_csv('outputs/key_log.txt', sep=" ", encoding='latin-1')
+    df = pd.read_csv('RocketType/key_log.txt', sep=" ", encoding='latin-1')
 
 
     # In[73]:
