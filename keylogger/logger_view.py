@@ -24,15 +24,14 @@ def get_wpm_by_day():
     try:
         statstr = str(stats.get_stats())
     except Exception as e:
-        return "Error retrieving stats: \n" + str(e) + "\n"
-            "\nif this issue persists, please consider" +
+        return "Error retrieving stats: \n" + str(e) + \
+            "\nif this issue persists, please consider" + \
             "\ndeleting your key_log.txt file..."
     try:
         statstr = "\n".join(statstr.split("\n")[1:-1])
         return "WPM by day:\n" + statstr
     except:
         return "No data yet"
-
 
 def init_systray(env):
     tray = QSystemTrayIcon(QIcon(env['icon_file']))
