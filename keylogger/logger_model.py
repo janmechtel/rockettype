@@ -31,6 +31,8 @@ class gui:
         self.exit.triggered.connect(self.app.exit)
         self.show.triggered.connect(self.show_window)
 
+        self.env['show_window'] = self.show.trigger
+
         self.logger = logger_thread
 
         self.logger.finished.connect(self.app.exit)
@@ -39,7 +41,6 @@ class gui:
         self.show_window(None)
 
     def show_window(self, q):
-        self.window.show()
         self.wpm.setText(logger_view.get_wpm_by_day())
         self.env_lock.acquire()
         # TODO: Update this when window is open and should_log changes,
@@ -47,6 +48,8 @@ class gui:
         status_str = "Enabled" if self.env['should_log'] else "Disabled"
         self.status.setText(status_str)
         self.env_lock.release()
+
+        self.window.show()
 
     def pause_app(self, q):
         self.env_lock.acquire()

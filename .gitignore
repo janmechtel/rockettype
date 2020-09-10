@@ -1,5 +1,6 @@
 
 outputs/
+RocketType/
 .ipynb_checkpoints/
 
 # github default .gitignore for python

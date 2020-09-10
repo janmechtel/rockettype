@@ -53,7 +53,7 @@ def __init__():
     env['PROCESS_QUERY_INFORMATION'] = 0x0400
     env['previous_time'] = time.time()
 
-    env['log_dir'] = "outputs/"
+    env['log_dir'] = "RocketType/"
 
     # Create an outputs directory if one does not already exist
     try:
@@ -87,16 +87,9 @@ def on_press(key):
 
     # control-alt-t prints statistics and sends a notification with statistics too
     if str(key) == "<84>": # ctrl-alt-t
-        current_stats = logger_stats.get_stats()
+        env['show_window']()
 
-        print(current_stats)
-
-        try:
-            env['toaster'].show_toast(f"RocketType Statistics",
-                str(current_stats),
-                env['icon_file'], duration=7, threaded=True)
-        except:
-            pass
+        time.sleep(1)
         return True
 
     # control-alt-r toggles logging
