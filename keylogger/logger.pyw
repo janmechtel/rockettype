@@ -1,6 +1,6 @@
 #!python3.8
 # https://pynsist.readthedocs.io/en/latest/cfgfile.html#application-section
-import sys, os, time
+import sys, os, time, signal
 import logging
 import site
 import ctypes, ctypes.wintypes
@@ -182,6 +182,11 @@ def main():
             "It appears that RocketType is already running!",
             icon_path=env['icon_file'], duration=5, threaded=False)
         sys.exit()
+
+    # Remove LOCK file when killed
+    signal.signal(signal.SIGINT, reset_lock)
+    signal.signal(signal.SIGTERM, reset_lock)
+    signal.signal(signal.SIGABRT, reset_lock)
 
     keylogger = logger_thread()
     keylogger.set_func(start_keylogger)
