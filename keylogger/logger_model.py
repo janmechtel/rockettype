@@ -38,7 +38,7 @@ class gui:
         self.logger.finished.connect(self.app.exit)
         self.logger.start()
 
-        self.show_window(None)
+        # self.show_window(None)
 
     def show_window(self, q):
         self.wpm.setText(logger_view.get_wpm_by_day())

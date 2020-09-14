@@ -1,6 +1,6 @@
 #!python3.8
 # https://pynsist.readthedocs.io/en/latest/cfgfile.html#application-section
-import sys, os, time
+import sys, os, time, signal
 import logging
 import site
 import ctypes, ctypes.wintypes
@@ -147,7 +147,6 @@ def async_on_press(key):
     return ret
 
 def start_keylogger():
-
     with keyboard.Listener(on_press=async_on_press) as listener:
         env_lock.acquire()
         try:
@@ -159,17 +158,45 @@ def start_keylogger():
         env_lock.release()
         listener.join()
 
+def keylogger_locker():
+    '''Prevents more than one instance of RocketType from running at the
+    same time. Will return false if another instance detected.'''
+    if not os.path.exists(env['log_dir'] + "LOCK"):
+        open(env['log_dir'] + "LOCK", "w+").close()
+        return True
+    else:
+        return False
+
+def reset_lock():
+    '''Deletes the lock file'''
+    try:
+        os.remove(env['log_dir'] + "LOCK")
+    except:
+        pass
+
 def main():
     __init__()
+
+    if not keylogger_locker():
+        env['toaster'].show_toast("Failed to start",
+            "It appears that RocketType is already running!",
+            icon_path=env['icon_file'], duration=5, threaded=False)
+        sys.exit()
+
+    # Remove LOCK file when killed
+    signal.signal(signal.SIGINT, reset_lock)
+    signal.signal(signal.SIGTERM, reset_lock)
+    signal.signal(signal.SIGABRT, reset_lock)
+
     keylogger = logger_thread()
     keylogger.set_func(start_keylogger)
-
-    #print(env['icon_file'])
 
     app = gui(keylogger, env, env_lock)
     app.exec_()
 
     env['output_file'].close()
+
+    reset_lock()
 
     try:
         env['toaster'].show_toast("Exited",
