@@ -37,8 +37,11 @@ def init_systray(env):
     tray = QSystemTrayIcon(QIcon(env['icon_file']))
     menu = QMenu()
     pauseAction = menu.addAction("Toggle Recording")
+    pauseAction.setShortcut("Ctrl+Alt+R")
     statsAction = menu.addAction("See statistics")
+    statsAction.setShortcut("Ctrl+Alt+T")
     exitAction = menu.addAction("Exit")
+    exitAction.setShortcut("Ctrl+Alt+X")
     tray.setContextMenu(menu)
     tray.show()
 
