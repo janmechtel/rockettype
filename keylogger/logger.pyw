@@ -3,6 +3,7 @@
 import sys, os, time, signal
 import logging
 import site
+import csv
 import ctypes, ctypes.wintypes
 from threading import Lock
 
@@ -12,6 +13,7 @@ from win10toast import ToastNotifier # pip install win10toast
 from keylogger.logger_stats import get_stats
 from keylogger.logger_view import *
 from keylogger.logger_model import *
+
 
 # Stores all global variables for the keylogger, such as logging file, debug mode, and keyboard interfaces
 env = {}
@@ -55,6 +57,7 @@ def __init__():
 
     env['log_dir'] = "RocketType/"
     env['keyboard'] = keyboard.Controller()
+    env['typos'] = init_typos()
 
     # Create an outputs directory if one does not already exist
     try:
@@ -77,6 +80,17 @@ def __init__():
     # env['toaster'] = ToastNotifier()
     env['icon_file'] = data_file_path = os.path.join(os.path.dirname(__file__), 'icon.ico')
     env['words'] = [""]
+
+def init_typos():
+    typos = {}
+    with open('commonTypos.csv', newline='') as csvfile:
+        typoread = csv.reader(csvfile, delimiter=':', quotechar='|')
+        for row in typoread:
+            typos[row[2]] = row[4]
+        for typo in list(typos)[-10:]:
+            print(typo)
+
+    return typos
 
 def on_press(key):
     # keybinds that always should be dealt with should go up here
@@ -132,17 +146,27 @@ def on_press(key):
     
     # SUGGESTION: Ignore keys that are longer than onddmaybe whesould mot go back so cuhe character long that aren't space (ex: alt)
     if key == keyboard.Key.space:
-        if env['words'][-1] == "teh":
-            print("ERROR detected - sending the opposite keys")
-            env['keyboard'].press(keyboard.Key.delete)
-            env['keyboard'].release(keyboard.Key.delete)
-            env['keyboard'].press(keyboard.Key.delete)
-            env['keyboard'].release(keyboard.Key.delete)
-            env['keyboard'].press(keyboard.Key.delete)
-            env['keyboard'].release(keyboard.Key.delete)
-            env['keyboard'].type("he ")
+        completedWord = env['words'][-1]
+        print(completedWord)
+        if completedWord in env['typos']:
+            print("TYPO detected")
+            print(env['typos'][completedWord])
 
+            for _ in range(0, len(completedWord)+1):
+                env['keyboard'].press(keyboard.Key.backspace)
+                env['keyboard'].release(keyboard.Key.backspace)
+            env['keyboard'].type(env['typos'][completedWord]+" ")
+            
+        if completedWord == "teh":
+            print("ERROR detected - sending the opposite keys")
+            env['keyboard'].press(keyboard.Key.backspace)
+            env['keyboard'].release(keyboard.Key.backspace)
+            env['keyboard'].press(keyboard.Key.backspace)
+            env['keyboard'].release(keyboard.Key.backspace)
+            env['keyboard'].press(keyboard.Key.backspace)
+            env['keyboard'].release(keyboard.Key.backspace)
         env['words'].append("")    
+
     if len(str(key)) <= 3:
         env['words'][-1]  = env['words'][-1] + str(key).replace("'","")
         env['words']=env['words'][-5:] 
