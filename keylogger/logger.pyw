@@ -3,6 +3,7 @@
 import sys, os, time, signal
 import logging
 import site
+import csv
 import ctypes, ctypes.wintypes
 from threading import Lock
 
@@ -54,6 +55,8 @@ def __init__():
     env['previous_time'] = time.time()
 
     env['log_dir'] = "RocketType/"
+    env['keyboard'] = keyboard.Controller()
+    env['typos'] = init_typos()
 
     # Create an outputs directory if one does not already exist
     try:
@@ -75,8 +78,18 @@ def __init__():
     env['should_log'] = True
     env['toaster'] = ToastNotifier()
     env['icon_file'] = data_file_path = os.path.join(os.path.dirname(__file__), 'icon.ico')
+    env['words'] = [""]
 
+def init_typos():
+    typos = {}
+    with open('commonTypos.csv', newline='') as csvfile:
+        typoread = csv.reader(csvfile, delimiter=':', quotechar='|')
+        for row in typoread:
+            typos[row[2]] = row[4]
 
+    print(f"Number of typos read from .csv: {len(typos)}")
+    
+    return typos
 
 def on_press(key):
     # keybinds that always should be dealt with should go up here
@@ -114,7 +127,6 @@ def on_press(key):
 
     # keybinds that should be ignored when recording is off go here
 
-    # SUGGESTION: Ignore keys that are longer than one character long that aren't space (ex: alt)
 
     current_time = time.time()
     delta = int((current_time - env['previous_time'])*1000)
@@ -129,8 +141,36 @@ def on_press(key):
     if len(name.split(" ")) == 4:
         env['output_file'].write(name + '\n')
 
-    print(name)
+    # print(name)
+    
+    # SUGGESTION: Ignore keys that are longer than onddmaybe whesould mot go back so cuhe character long that aren't space (ex: alt)
+    if key == keyboard.Key.space:
+        completedWord = env['words'][-1]
+        print(completedWord)
+        if completedWord in env['typos']:
+            print("TYPO detected " + completedWord)
+            print(env['typos'][completedWord])
 
+            for _ in range(0, len(completedWord)+1):
+                env['keyboard'].press(keyboard.Key.backspace)
+                env['keyboard'].release(keyboard.Key.backspace)
+            env['keyboard'].type(env['typos'][completedWord]+" ")
+            
+        if completedWord == "teh":
+            print("ERROR detected - sending the opposite keys")
+            env['keyboard'].press(keyboard.Key.backspace)
+            env['keyboard'].release(keyboard.Key.backspace)
+            env['keyboard'].press(keyboard.Key.backspace)
+            env['keyboard'].release(keyboard.Key.backspace)
+            env['keyboard'].press(keyboard.Key.backspace)
+            env['keyboard'].release(keyboard.Key.backspace)
+        env['words'].append("")    
+
+    if len(str(key)) <= 3:
+        env['words'][-1]  = env['words'][-1] + str(key).replace("'","")
+        env['words']=env['words'][-5:] 
+
+    print(env['words'][-1], end="\r")
     env['previous_time'] = current_time
 
 def async_on_press(key):
@@ -140,7 +180,8 @@ def async_on_press(key):
     ret = True # So that if on_press fails, we still are able to return something
     try:
         ret = on_press(key)
-    except Exception as e:
+    except Exception as e: 
+        print(e)
         logging.info(e)
 
     env_lock.release()

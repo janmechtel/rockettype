@@ -88,9 +88,10 @@ Typos are a big slow down for many typists. Auto-Correct is a way to combat that
 1. Install Python 3
 2. Clone Repository
 3. Install requirements: `pip install pynput win10toast PyQt5`
-4. Optional: Create a DEBUG folder `mkdir output\DEBUG`
-5. Run `python startkeylogger.py`
-6. Optional: add to your autorun (Win+R type `shell:startup` + right-click drag `logger.pyw` into the folder and select "Create shortcut here"
+4. Run `python startkeylogger.pyw`
+5. Optional: add to your autorun (Win+R type `shell:startup` + right-click drag `logger.pyw` into the folder and select "Create shortcut here"
+
+Debug mode: Create a DEBUG folder `mkdir output\DEBUG` (optional)
 
 _DISCLAIMER: In Debug mode **all** keypresses are logged, including passwords etc. See: [Avoid storing passwords](https://github.com/janmechtel/rockettype/issues/6)_
 
