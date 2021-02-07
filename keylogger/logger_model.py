@@ -56,12 +56,12 @@ class gui:
         self.env['should_log'] = not self.env['should_log']
         enabled_string = "Enabled" if self.env['should_log'] else "Disabled"
         # Show notification
-        try:
-            self.env['toaster'].show_toast(f"RocketType {enabled_string}",
-                " ",
-                icon_path=self.env['icon_file'], duration=3, threaded=True)
-        except:
-            pass
+        # try:
+        #     self.env['toaster'].show_toast(f"RocketType {enabled_string}",
+        #         " ",
+        #         icon_path=self.env['icon_file'], duration=3, threaded=True)
+        # except:
+        #     pass
         self.env_lock.release()
 
     def exec_(self):

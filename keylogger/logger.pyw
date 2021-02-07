@@ -54,6 +54,7 @@ def __init__():
     env['previous_time'] = time.time()
 
     env['log_dir'] = "RocketType/"
+    env['keyboard'] = keyboard.Controller()
 
     # Create an outputs directory if one does not already exist
     try:
@@ -73,10 +74,9 @@ def __init__():
     logging.basicConfig(filename=(env['log_dir'] + "exceptions.txt"), level=logging.DEBUG, format='%(message)s')
 
     env['should_log'] = True
-    env['toaster'] = ToastNotifier()
+    # env['toaster'] = ToastNotifier()
     env['icon_file'] = data_file_path = os.path.join(os.path.dirname(__file__), 'icon.ico')
-
-
+    env['words'] = [""]
 
 def on_press(key):
     # keybinds that always should be dealt with should go up here
@@ -98,12 +98,12 @@ def on_press(key):
         enabled_string = "Enabled" if env['should_log'] else "Disabled"
 
         # Show notification
-        try:
-            env['toaster'].show_toast(f"RocketType {enabled_string}",
-                " ",
-                icon_path=env['icon_file'], duration=3, threaded=True)
-        except:
-            pass
+        # try:
+        #     env['toaster'].show_toast(f"RocketType {enabled_string}",
+        #         " ",
+        #         icon_path=env['icon_file'], duration=3, threaded=True)
+        # except:
+        #     pass
 
         time.sleep(1)
 
@@ -114,7 +114,6 @@ def on_press(key):
 
     # keybinds that should be ignored when recording is off go here
 
-    # SUGGESTION: Ignore keys that are longer than one character long that aren't space (ex: alt)
 
     current_time = time.time()
     delta = int((current_time - env['previous_time'])*1000)
@@ -129,7 +128,25 @@ def on_press(key):
     if len(name.split(" ")) == 4:
         env['output_file'].write(name + '\n')
 
-    print(name)
+    # print(name)
+    
+    # SUGGESTION: Ignore keys that are longer than onddmaybe whesould mot go back so cuhe character long that aren't space (ex: alt)
+    if key == keyboard.Key.space:
+        if env['words'][-1] == "teh":
+            print("ERROR detected - sending the opposite keys")
+            env['keyboard'].press(keyboard.Key.delete)
+            env['keyboard'].release(keyboard.Key.delete)
+            env['keyboard'].press(keyboard.Key.delete)
+            env['keyboard'].release(keyboard.Key.delete)
+            env['keyboard'].press(keyboard.Key.delete)
+            env['keyboard'].release(keyboard.Key.delete)
+            env['keyboard'].type("he ")
+
+        env['words'].append("")    
+    if len(str(key)) <= 3:
+        env['words'][-1]  = env['words'][-1] + str(key).replace("'","")
+        env['words']=env['words'][-5:] 
+        print(", ".join(env['words']))
 
     env['previous_time'] = current_time
 
@@ -138,10 +155,11 @@ def async_on_press(key):
     # from it while on_press is using it
     env_lock.acquire()
     ret = True # So that if on_press fails, we still are able to return something
-    try:
-        ret = on_press(key)
-    except Exception as e:
-        logging.info(e)
+    # try:
+    ret = on_press(key)
+    # except Exception as e: 
+    #     print(e)
+    #     logging.info(e)
 
     env_lock.release()
     return ret
@@ -149,12 +167,12 @@ def async_on_press(key):
 def start_keylogger():
     with keyboard.Listener(on_press=async_on_press) as listener:
         env_lock.acquire()
-        try:
-            env['toaster'].show_toast("RocketType Started and Enabled",
-                " ",
-                icon_path=env['icon_file'], duration=3, threaded=False)
-        except:
-            pass
+        # try:
+        #     env['toaster'].show_toast("RocketType Started and Enabled",
+        #         " ",
+        #         icon_path=env['icon_file'], duration=3, threaded=False)
+        # except:
+        #     pass
         env_lock.release()
         listener.join()
 
@@ -177,11 +195,11 @@ def reset_lock():
 def main():
     __init__()
 
-    if not keylogger_locker():
-        env['toaster'].show_toast("Failed to start",
-            "It appears that RocketType is already running!",
-            icon_path=env['icon_file'], duration=5, threaded=False)
-        sys.exit()
+    # if not keylogger_locker():
+    #     env['toaster'].show_toast("Failed to start",
+    #         "It appears that RocketType is already running!",
+    #         icon_path=env['icon_file'], duration=5, threaded=False)
+    #     sys.exit()
 
     # Remove LOCK file when killed
     signal.signal(signal.SIGINT, reset_lock)
@@ -198,12 +216,12 @@ def main():
 
     reset_lock()
 
-    try:
-        env['toaster'].show_toast("Exited",
-             "RocketType was closed and will not record keystrokes.",
-             icon_path=env['icon_file'], duration=5, threaded=False)
-    except:
-        pass
+    # try:
+    #     env['toaster'].show_toast("Exited",
+    #          "RocketType was closed and will not record keystrokes.",
+    #          icon_path=env['icon_file'], duration=5, threaded=False)
+    # except:
+    #     pass
 
 if __name__ == '__main__':
     main()
