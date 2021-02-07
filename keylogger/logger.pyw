@@ -149,7 +149,7 @@ def on_press(key):
         completedWord = env['words'][-1]
         print(completedWord)
         if completedWord in env['typos']:
-            print("TYPO detected")
+            print("TYPO detected " + completedWord)
             print(env['typos'][completedWord])
 
             for _ in range(0, len(completedWord)+1):
@@ -170,8 +170,8 @@ def on_press(key):
     if len(str(key)) <= 3:
         env['words'][-1]  = env['words'][-1] + str(key).replace("'","")
         env['words']=env['words'][-5:] 
-        print(", ".join(env['words']))
 
+    print(env['words'][-1], end="\r")
     env['previous_time'] = current_time
 
 def async_on_press(key):
