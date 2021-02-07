@@ -87,9 +87,9 @@ def init_typos():
         typoread = csv.reader(csvfile, delimiter=':', quotechar='|')
         for row in typoread:
             typos[row[2]] = row[4]
-        for typo in list(typos)[-10:]:
-            print(typo)
 
+    print(f"Number of typos read from .csv: {len(typos)}")
+    
     return typos
 
 def on_press(key):
