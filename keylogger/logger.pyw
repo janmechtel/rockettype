@@ -130,6 +130,7 @@ def on_press(key):
 
     # keybinds that should be ignored when recording is off go here
 
+    # this is for WPM logging
 
     current_time = time.time()
     delta = int((current_time - env['previous_time'])*1000)
@@ -138,15 +139,13 @@ def on_press(key):
     key = key if env['debug_mode'] else "'hidden'" # Only log actual key strokes for debugging as of now
 
     name = "{current_time} {delta} {key} {process}".format(current_time=current_time,delta=delta,key=str(key), process=process)
-    filename = env['log_dir'] + name + ".jpg"
 
+    # TODO: this should be handled in parsing the stats, not here
     # Only log name to file if there are 4 columns. Otherwise it will break the stats tool if an error occurs
     if len(name.split(" ")) == 4:
-        env['output_file'].write(name + '\n')
+        env['output_file'].write(name + '\n')         
 
-    # print(name)
-    
-    # SUGGESTION: Ignore keys that are longer than onddmaybe whesould mot go back so cuhe character long that aren't space (ex: alt)
+    # SUGGESTION: Ignore keys that are longer than 3 chars long that aren't space (ex: alt)
     if key == keyboard.Key.space:
         completedWord = env['words'][-1]
         print(completedWord)
@@ -159,14 +158,6 @@ def on_press(key):
                 env['keyboard'].release(keyboard.Key.backspace)
             env['keyboard'].type(env['typos'][completedWord]+" ")
             
-        if completedWord == "teh":
-            print("ERROR detected - sending the opposite keys")
-            env['keyboard'].press(keyboard.Key.backspace)
-            env['keyboard'].release(keyboard.Key.backspace)
-            env['keyboard'].press(keyboard.Key.backspace)
-            env['keyboard'].release(keyboard.Key.backspace)
-            env['keyboard'].press(keyboard.Key.backspace)
-            env['keyboard'].release(keyboard.Key.backspace)
         env['words'].append("")    
 
     if len(str(key)) <= 3:
