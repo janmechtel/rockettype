@@ -54,15 +54,7 @@ Name: WPM, dtype: int32
 
 The current scope is **convenient and safe logging** for statistics and personal data collection. See [open issues](https://github.com/janmechtel/rockettype/issues)
 
-### Epic I: correct finger?
-
-For faster touch typing the correct finger should be used. However, to _unlearn_ using the wrong finger is quite a challenge, especially when the habit is in muscle memory already. The idea is to:
-
-- Record a webcam shot on each keypress
-- Analyze whether the correct finger was used to press the key either through openCV or deep learning
-- Prevent the wrong key to register
-
-### Epic II: Auto-Correct
+### Epic I: Auto-Correct
 
 Typos are a big slow down for many typists. Auto-Correct is a way to combat that.
 
@@ -76,6 +68,19 @@ Typos are a big slow down for many typists. Auto-Correct is a way to combat that
 - [Universal AutoCorrect](http://www.biancolo.com/blog/autocorrect/) for [AutoHoteKey](https://www.autohotkey.com/)
 - [Windows Typing Predictions](https://www.howtogeek.com/429702/how-to-enable-text-prediction-for-a-hardware-keyboard-on-windows-10/)
 - [Lightkey](https://www.lightkey.io)
+
+### Epic II: correct finger?
+
+For faster touch typing the correct finger should be used. However, to _unlearn_ using the wrong finger is quite a challenge, especially when the habit is in muscle memory already. The idea is to:
+
+- Record a webcam shot on each keypress
+- Analyze whether the correct finger was used to press the key either through openCV or deep learning
+- Prevent the wrong key to register
+
+#### Technique tools for inspiration
+
+- [a keyboard that shocks you for incorrect technique] (https://news.ycombinator.com/item?id=25958837)
+
 
 ## Websites
 
@@ -102,3 +107,9 @@ _DISCLAIMER: In Debug mode **all** keypresses are logged, including passwords et
 3. Modify your local pynsist/wheels.py as described [here](https://github.com/janmechtel/rockettype/issues/18#issuecomment-686708771)
 3. `python -m nsist installer.cfg`
 4. [Create a new release](https://github.com/janmechtel/rockettype/releases/new) and upload the .exe
+
+## Troubleshooting
+
+- Check exceptions %LOCALAPPDATA%\Programs\RocketType\RocketType
+- Try to run via python.exe instead of pythonw.exe to see standard out
+- add a DEBUG/ folder to %LOCALAPPDATA%\Programs\RocketType\RocketType
