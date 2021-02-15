@@ -54,26 +54,29 @@ def __init__():
     env['PROCESS_QUERY_INFORMATION'] = 0x0400
     env['previous_time'] = time.time()
 
-    env['log_dir'] = "RocketType/"
+    env['log_dir'] = "Logs/"
     env['keyboard'] = keyboard.Controller()
     env['typos'] = init_typos()
 
+    
     # Create an outputs directory if one does not already exist
     try:
         os.mkdir(env['log_dir'])
     except:
         pass
 
+    env['debug_mode'] = os.path.exists(env['log_dir'] + "/DEBUG")
+
     # Create file w/ header if non existant
     if not os.path.exists(env['log_dir'] + "key_log.txt"):
         with open(env['log_dir'] + "key_log.txt", "w+") as new_file:
             new_file.write("time delta key application\n")
 
-    env['debug_mode'] = os.path.exists(env['log_dir'] + "/DEBUG")
-
     # Open a file for logging
     env['output_file'] = open(env['log_dir'] + 'key_log.txt', 'a+')
-    logging.basicConfig(filename=(env['log_dir'] + "exceptions.txt"), level=logging.DEBUG, format='%(message)s')
+    logging.basicConfig(level=logging.DEBUG, format='%(message)s',
+        handlers=[logging.FileHandler(env['log_dir'] + "exceptions.txt"),
+        logging.StreamHandler()])
 
     env['should_log'] = True
     env['toaster'] = ToastNotifier()
@@ -202,10 +205,16 @@ def start_keylogger():
 def keylogger_locker():
     '''Prevents more than one instance of RocketType from running at the
     same time. Will return false if another instance detected.'''
+    
+    # In Debug mode, always delete LOCK fils
+    if env['debug_mode']:
+        os.remove(env['log_dir'] + "LOCK")
+
     if not os.path.exists(env['log_dir'] + "LOCK"):
         open(env['log_dir'] + "LOCK", "w+").close()
         return True
     else:
+        logging.error("logfile detected, will exit now. Consider to delete: " + env['log_dir'] + "LOCK")
         return False
 
 def reset_lock():
