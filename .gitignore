@@ -3,6 +3,8 @@ outputs/
 RocketType/
 .ipynb_checkpoints/
 
+.idea/
+
 # github default .gitignore for python
 
 # Byte-compiled / optimized / DLL files
