@@ -18,6 +18,14 @@ from keylogger.logger_model import *
 env = {}
 env_lock = Lock()
 
+ignoredKeys = [
+    keyboard.Key.ctrl_l,
+    keyboard.Key.ctrl_r,
+    keyboard.Key.page_up,
+    keyboard.Key.page_down,
+    keyboard.Key.shift
+]
+
 def get_active_process():
     active = ctypes.windll.user32.GetForegroundWindow()
     active_window = ctypes.windll.user32.GetWindowThreadProcessId(active,ctypes.byref(env['pid']))
@@ -58,13 +66,11 @@ def __init__():
     env['keyboard'] = keyboard.Controller()
     env['typos'] = init_typos()
 
-    
     # Create an outputs directory if one does not already exist
     try:
         os.mkdir(env['log_dir'])
     except:
         pass
-
     env['debug_mode'] = os.path.exists(env['log_dir'] + "/DEBUG")
 
     # Create file w/ header if non existant
@@ -73,10 +79,11 @@ def __init__():
             new_file.write("time delta key application\n")
 
     # Open a file for logging
-    env['output_file'] = open(env['log_dir'] + 'key_log.txt', 'a+')
+    env['output_file_wpm'] = open(env['log_dir'] + 'key_log_wpm.txt', 'a+')
+    env['output_file_typos'] = open(env['log_dir'] + 'key_log_typos.txt', 'a+')
     logging.basicConfig(level=logging.DEBUG, format='%(message)s',
         handlers=[logging.FileHandler(env['log_dir'] + "exceptions.txt"),
-        logging.StreamHandler()])
+                  logging.StreamHandler()])
 
     env['should_log'] = True
     env['toaster'] = ToastNotifier()
@@ -116,8 +123,8 @@ def on_press(key):
         # Show notification
         try:
             env['toaster'].show_toast(f"RocketType {enabled_string}",
-                " ",
-                icon_path=env['icon_file'], duration=3, threaded=True)
+                                      " ",
+                                      icon_path=env['icon_file'], duration=3, threaded=True)
         except:
             pass
 
@@ -143,7 +150,19 @@ def on_press(key):
     # TODO: this should be handled in parsing the stats, not here
     # Only log name to file if there are 4 columns. Otherwise it will break the stats tool if an error occurs
     if len(name.split(" ")) == 4:
-        env['output_file'].write(name + '\n')         
+        env['output_file_wpm'].write(name + '\n')
+
+    if env['debug_mode']:
+        if key not in ignoredKeys:
+            if key == keyboard.Key.space:
+                env['output_file_typos'].write(" ")
+            elif key == keyboard.Key.backspace:
+                env['output_file_typos'].write(" <")
+            elif len(str(key)) <=3:
+                env['output_file_typos'].write(str(key).replace("'",""))
+            else:
+                env['output_file_typos'].write(str(key) + '\n')
+            env['output_file_typos'].flush()
 
     # SUGGESTION: Ignore keys that are longer than 3 chars long that aren't space (ex: alt)
     if key == keyboard.Key.space:
@@ -157,12 +176,12 @@ def on_press(key):
                 env['keyboard'].press(keyboard.Key.backspace)
                 env['keyboard'].release(keyboard.Key.backspace)
             env['keyboard'].type(env['typos'][completedWord]+" ")
-            
-        env['words'].append("")    
+
+        env['words'].append("")
 
     if len(str(key)) <= 3:
         env['words'][-1]  = env['words'][-1] + str(key).replace("'","")
-        env['words']=env['words'][-5:] 
+        env['words']=env['words'][-5:]
 
     print(env['words'][-1], end="\r")
     env['previous_time'] = current_time
@@ -193,19 +212,20 @@ def start_keylogger():
         env_lock.release()
         listener.join()
 
-def keylogger_locker():
+def lock_file_created():
     '''Prevents more than one instance of RocketType from running at the
     same time. Will return false if another instance detected.'''
-    
-    # In Debug mode, always delete LOCK fils
-    if env['debug_mode']:
-        os.remove(env['log_dir'] + "LOCK")
 
-    if not os.path.exists(env['log_dir'] + "LOCK"):
-        open(env['log_dir'] + "LOCK", "w+").close()
+    # In Debug mode, always delete LOCK fils
+    lockfile = env['log_dir'] + "LOCK";
+
+    if not os.path.exists(lockfile):
+        open(lockfile, "w+").close()
+        return True
+    elif env['debug_mode']:
         return True
     else:
-        logging.error("logfile detected, will exit now. Consider to delete: " + env['log_dir'] + "LOCK")
+        logging.error("existing lock file detected, will exit now. Consider to delete manually or activate debug mode: " + lockfile)
         return False
 
 def reset_lock():
@@ -218,7 +238,7 @@ def reset_lock():
 def main():
     __init__()
 
-    if not keylogger_locker():
+    if not lock_file_created():
         env['toaster'].show_toast("Failed to start",
             "It appears that RocketType is already running!",
             icon_path=env['icon_file'], duration=5, threaded=False)
@@ -235,7 +255,7 @@ def main():
     app = gui(keylogger, env, env_lock)
     app.exec_()
 
-    env['output_file'].close()
+    env['output_file_wpm'].close()
 
     reset_lock()
 
