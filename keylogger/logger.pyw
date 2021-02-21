@@ -151,15 +151,6 @@ def on_press(key):
     delta = int((current_time - env['previous_time'])*1000)
     process = get_active_process()
 
-    key = key if env['debug_mode'] else "'hidden'" # Only log actual key strokes for debugging as of now
-
-    name = "{current_time} {delta} {key} {process}".format(current_time=current_time,delta=delta,key=str(key), process=process)
-
-    # TODO: this should be handled in parsing the stats, not here
-    # Only log name to file if there are 4 columns. Otherwise it will break the stats tool if an error occurs
-    if len(name.split(" ")) == 4:
-        env['output_file_wpm'].write(name + '\n')
-
     if env['debug_mode']:
         if key not in ignoredKeys:
             if key == keyboard.Key.space:
@@ -192,6 +183,16 @@ def on_press(key):
         env['words']=env['words'][-5:]
 
     print(env['words'][-1], end="\r")
+
+    key = key if env['debug_mode'] else "'hidden'" # Only log actual key strokes for debugging as of now
+
+    name = "{current_time} {delta} {key} {process}".format(current_time=current_time,delta=delta,key=str(key), process=process)
+
+    # TODO: this should be handled in parsing the stats, not here
+    # Only log name to file if there are 4 columns. Otherwise it will break the stats tool if an error occurs
+    if len(name.split(" ")) == 4:
+        env['output_file_wpm'].write(name + '\n')
+
     env['previous_time'] = current_time
 
 def async_on_press(key):
@@ -246,16 +247,16 @@ def reset_lock():
 def main():
     __init__()
 
-    if not lock_file_created():
-        env['toaster'].show_toast("Failed to start",
-            "It appears that RocketType is already running!",
-            icon_path=env['icon_file'], duration=5, threaded=False)
-        sys.exit()
+    #if not lock_file_created():
+    #    env['toaster'].show_toast("Failed to start",
+    #        "It appears that RocketType is already running!",
+    #        icon_path=env['icon_file'], duration=5, threaded=False)
+    #    sys.exit()
 
-    # Remove LOCK file when killed
-    signal.signal(signal.SIGINT, reset_lock)
-    signal.signal(signal.SIGTERM, reset_lock)
-    signal.signal(signal.SIGABRT, reset_lock)
+    ## Remove LOCK file when killed
+    #signal.signal(signal.SIGINT, reset_lock)
+    #signal.signal(signal.SIGTERM, reset_lock)
+    #signal.signal(signal.SIGABRT, reset_lock)
 
     keylogger = logger_thread()
     keylogger.set_func(start_keylogger)
