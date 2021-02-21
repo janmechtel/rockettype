@@ -92,13 +92,21 @@ def __init__():
 
 def init_typos():
     typos = {}
-    with open('commonTypos.csv', newline='') as csvfile:
+    scriptdir, script = os.path.split(__file__)
+    with open(scriptdir + '\..\..\dictionaries\commonTypos.csv', newline='') as csvfile:
         typoread = csv.reader(csvfile, delimiter=':', quotechar='|')
         for row in typoread:
             typos[row[2]] = row[4]
 
     print(f"Number of typos read from .csv: {len(typos)}")
-    
+
+    with open(scriptdir + '\..\..\dictionaries\GermanTyposWikipedia.csv', newline='') as csvfile:
+        typoread = csv.reader(csvfile, delimiter=',')
+        for row in typoread:
+            typos[row[0]] = row[1]
+
+    print(f"Total of typos read from .csvs: {len(typos)}")
+
     return typos
 
 def on_press(key):
