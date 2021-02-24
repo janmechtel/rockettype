@@ -1,6 +1,6 @@
 # RocketType
 
-A local keylogger to track typing statistics like WPM on Windows.
+Windows typing tool to fix typos and record statistics like WPM.
 
 ![RocketType Screenshot](https://github.com/janmechtel/rockettype/blob/master/website/key_log_sample.png?raw=true)
 
